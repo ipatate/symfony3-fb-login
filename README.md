@@ -33,3 +33,8 @@ if user not exist, it is created.
 #### FBSDK (src/AppBundle/Utils/Auth)
 
 simple class for use Facebook SDK and implement methods in one point
+
+
+#### Event request
+
+User can remove access to email on FB login popup. Event request detect if user logged has not email and if is true, redirect to form for add email.
