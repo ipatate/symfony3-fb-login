@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use Facebook\GraphNodes\GraphUser;
@@ -23,12 +22,11 @@ class FBAuthenticator extends AbstractGuardAuthenticator
 
     private $entity_manager;
 
-    public function __construct(EntityManager $entity_manager, RouterInterface $router, FBSDK $fb_sdk, Session $session)
+    public function __construct(EntityManager $entity_manager, RouterInterface $router, FBSDK $fb_sdk)
     {
         $this->entity_manager = $entity_manager;
         $this->router = $router;
         $this->fb_sdk = $fb_sdk;
-        $this->session = $session;
     }
 
     /**
@@ -60,13 +58,6 @@ class FBAuthenticator extends AbstractGuardAuthenticator
             throw new AuthenticationException('Error Processing Authentication', 1);
         }
 
-        // test if email exist
-        try {
-            $email = $fbuser['email'];
-        } catch (\Exception $e) {
-            $this->session->getFlashBag()->add('error', 'Email is required for authentication ! Go to Facebook > parameters > application and delete app before reconnect');
-            throw new AuthenticationException('Error Processing Authentication', 1);
-        }
         // verif if user exist
         $rep = $this->entity_manager->getRepository('AppBundle:User');
         $user = $rep->findOneBy(['fb_id' => $fbuser['id']]);
@@ -89,7 +80,9 @@ class FBAuthenticator extends AbstractGuardAuthenticator
     {
         $user = new User();
         $user->setUsername($fbuser['name']);
-        $user->setEmail($fbuser['email']);
+        if (property_exists('email', $fbuser)) {
+            $user->setEmail($fbuser['email']);
+        }
         $user->setFbId($fbuser['id']);
         $user->setRole('ROLE_USER');
         $this->entity_manager->persist($user);
@@ -121,6 +114,13 @@ class FBAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        $user = $token->getUser();
+
+        // if user has remove access to email, redirect to form
+        if ($user->getEmail() === null) {
+            $url = $this->router->generate('email_form');
+            return new RedirectResponse($url);
+        }
         // success redirect to homepage
         $url = $this->router->generate('fb-access');
         return new RedirectResponse($url);

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h3>Add your email</h3>
+<fieldset>
+  <legend>
+    Email is required for all account, please add your email
+  </legend>
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Create" />
+{{ form_end(form) }}
+</fieldset>
+{% endblock %}

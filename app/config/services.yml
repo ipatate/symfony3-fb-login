@@ -15,4 +15,3 @@ services:
           - '@doctrine.orm.entity_manager'
           - "@router"
           - '@fb_sdk'
-          - '@session'

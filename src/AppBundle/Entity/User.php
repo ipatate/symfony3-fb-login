@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * User
+ * User.
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, \Serializable
 {
     public static $listRoles = array(
-        'ROLE_USER' => 'ROLE_USER'
+        'ROLE_USER' => 'ROLE_USER',
     );
     /**
      * @var int
@@ -34,7 +34,6 @@ class User implements UserInterface, \Serializable
      */
     private $username;
 
-
     /**
      * @var string
      *
@@ -52,7 +51,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=60, unique=true)
+     * @ORM\Column(name="email", type="string", length=60, unique=true, nullable=true)
      * @Assert\NotBlank()
      * @Assert\Email()
      */
@@ -65,7 +64,7 @@ class User implements UserInterface, \Serializable
      */
     private $isActive;
 
-     /**
+    /**
      * @var string
      *
      * @ORM\Column(name="role", type="string", length=255)
@@ -78,8 +77,9 @@ class User implements UserInterface, \Serializable
     {
         $this->isActive = true;
     }
+
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -89,7 +89,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
      *
@@ -103,7 +103,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get username
+     * Get username.
      *
      * @return string
      */
@@ -113,7 +113,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
      *
@@ -127,7 +127,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -137,7 +137,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
      *
@@ -151,7 +151,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -161,9 +161,9 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set isActive
+     * Set isActive.
      *
-     * @param boolean $isActive
+     * @param bool $isActive
      *
      * @return User
      */
@@ -175,7 +175,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get isActive
+     * Get isActive.
      *
      * @return bool
      */
@@ -205,7 +205,7 @@ class User implements UserInterface, \Serializable
     {
         return serialize(array(
             $this->id,
-            $this->username
+            $this->username,
         ));
     }
 
@@ -218,8 +218,8 @@ class User implements UserInterface, \Serializable
         ) = unserialize($serialized);
     }
 
-        /**
-     * Set role
+    /**
+     * Set role.
      *
      * @param string $role
      *
@@ -233,7 +233,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return string
      */
@@ -242,10 +242,10 @@ class User implements UserInterface, \Serializable
         return $this->role;
     }
 
-     /**
-     * return static list for roles
+    /**
+     * return static list for roles.
      *
-     * @return Array
+     * @return array
      */
     public static function getListRoles()
     {
@@ -253,7 +253,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set fbId
+     * Set fbId.
      *
      * @param string $fbId
      *
@@ -267,7 +267,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get fbId
+     * Get fbId.
      *
      * @return string
      */

@@ -22,6 +22,28 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/email", name="email_form")
+     */
+    public function emailFormAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm('AppBundle\Form\UserType', $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('homepage', array('id' => $user->getId()));
+        }
+        return $this->render('default/form.html.twig', array(
+                    'user' => $user,
+                    'form' => $form->createView(),
+                ));
+    }
+
+    /**
      * @Route("/fb-callback/", name="fb-callback")
      *
      * @param Request $request
