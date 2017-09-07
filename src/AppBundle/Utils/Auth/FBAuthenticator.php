@@ -54,13 +54,13 @@ class FBAuthenticator extends AbstractGuardAuthenticator
             throw $e;
         }
 
-        if ($fbuser['id'] === null) {
+        if ($fbuser->getId() === null) {
             throw new AuthenticationException('Error Processing Authentication', 1);
         }
 
         // verif if user exist
         $rep = $this->entity_manager->getRepository('AppBundle:User');
-        $user = $rep->findOneBy(['fb_id' => $fbuser['id']]);
+        $user = $rep->findOneBy(['fb_id' => $fbuser->getId()]);
         if ($user === null) {
             $user = $this->createUser($fbuser);
         }
@@ -79,11 +79,9 @@ class FBAuthenticator extends AbstractGuardAuthenticator
     private function createUser(GraphUser $fbuser): User
     {
         $user = new User();
-        $user->setUsername($fbuser['name']);
-        if (property_exists('email', $fbuser)) {
-            $user->setEmail($fbuser['email']);
-        }
-        $user->setFbId($fbuser['id']);
+        $user->setUsername($fbuser->getName());
+        $user->setEmail($fbuser->getEmail());
+        $user->setFbId($fbuser->getId());
         $user->setRole('ROLE_USER');
         $this->entity_manager->persist($user);
         $this->entity_manager->flush();
@@ -114,13 +112,6 @@ class FBAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $user = $token->getUser();
-
-        // if user has remove access to email, redirect to form
-        if ($user->getEmail() === null) {
-            $url = $this->router->generate('email_form');
-            return new RedirectResponse($url);
-        }
         // success redirect to homepage
         $url = $this->router->generate('fb-access');
         return new RedirectResponse($url);

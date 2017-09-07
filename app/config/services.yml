@@ -15,3 +15,8 @@ services:
           - '@doctrine.orm.entity_manager'
           - "@router"
           - '@fb_sdk'
+  listener.request:
+    class: AppBundle\EventListener\RequestListener
+    arguments: ['@security.token_storage', '@security.authorization_checker', '@router']
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
