@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+       <div id="connect_fb">
+         {% if loginUrl is defined and app.user == null %}
+            <a href="{{loginUrl|escape}}">Log in with Facebook!</a>
+         {% endif %}
+         {% if app.user %}
+          <div>
+            <div>
+              <strong>Hello {{ app.user.username }}</strong>
+            </div>
+            <div>{{ app.user.email }}</div>
+            <a href="{{path('logout')}}">Logout</a>
+          </div>
+         {% endif %}
+       </div>
+{% endblock %}

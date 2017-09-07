@@ -1,0 +1,23 @@
+# Learn more about services, parameters and containers at
+# https://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+  fb_sdk:
+      class: AppBundle\Utils\Auth\FBSDK
+      arguments:
+          $app_id: '%fb_app_id%'
+          $app_secret: '%fb_app_secret%'
+  fb_authenticator:
+      class: AppBundle\Utils\Auth\FBAuthenticator
+      arguments:
+          - '@doctrine.orm.entity_manager'
+          - "@router"
+          - '@fb_sdk'
+          - '@session'
+  security_userprovider:
+      class: AppBundle\Utils\Auth\UserProvider
+      arguments:
+          - '@doctrine.orm.entity_manager'
+          - "@translator"

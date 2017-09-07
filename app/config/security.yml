@@ -1,0 +1,26 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        user_provider:
+            entity:
+                class: AppBundle:User
+                property: id
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        default:
+            anonymous: ~
+            guard:
+                authenticators:
+                    - fb_authenticator
+            logout:
+                path:   /logout
+                target: /
+    access_control:
+        - { path: ^/fb-access, roles: ROLE_USER }
