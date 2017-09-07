@@ -16,8 +16,3 @@ services:
           - "@router"
           - '@fb_sdk'
           - '@session'
-  security_userprovider:
-      class: AppBundle\Utils\Auth\UserProvider
-      arguments:
-          - '@doctrine.orm.entity_manager'
-          - "@translator"
